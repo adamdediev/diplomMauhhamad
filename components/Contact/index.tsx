@@ -198,11 +198,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             viewport={{ once: true }}
             className="animate_top w-full md:w-2/5 md:p-7.5 lg:w-[26%] xl:pt-15"
           >
-<<<<<<< HEAD
-            <h2 className="mb-12.5 -mt-[55px] text-3xl font-semibold text-black dark:text-white xl:text-sectiontitle2">
-=======
+
             <h2 className="mb-12.5 text-3xl font-semibold text-black dark:text-white xl:text-sectiontitle2">
->>>>>>> b4daa6055c36f86764066f9683449140090437e8
               Найди нас
             </h2>
 
