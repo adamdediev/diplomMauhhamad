@@ -42,7 +42,7 @@ jobs:
         name: codecov-umbrella
         
     - name: 💾 Сохранение артефактов покрытия
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report-${{ matrix.node-version }}
         path: coverage/
@@ -107,7 +107,7 @@ jobs:
         CI: true
         
     - name: 📊 Загрузка отчетов Playwright
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report-${{ matrix.browser }}
@@ -168,7 +168,7 @@ jobs:
         fi
         
     - name: 💾 Сохранение AI отчетов
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ai-analysis-reports
         path: |
@@ -226,7 +226,7 @@ jobs:
         temporaryPublicStorage: true
 
   test-summary:
-    name: 📋 Сводка тестирования
+    name: �� Сводка тестирования
     runs-on: ubuntu-latest
     needs: [unit-tests, integration-tests, e2e-tests, security-scan]
     if: always()
@@ -243,8 +243,7 @@ jobs:
         echo "- 🔒 Безопасность: ${{ needs.security-scan.result }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 🎯 Следующие шаги:" >> $GITHUB_STEP_SUMMARY
-        echo "- Проверьте отчеты покрытия кода" >> $GITHUB_STEP_SUMMARY
+        echo "- ������оверьте отчеты покрытия кода" >> $GITHUB_STEP_SUMMARY
         echo "- Изучите AI рекомендации по улучшению тестов" >> $GITHUB_STEP_SUMMARY
         echo "- Обратите внимание на проблемы безопасности" >> $GITHUB_STEP_SUMMARY
         echo "- Оптимизируйте производительность при необходимости" >> $GITHUB_STEP_SUMMARY
-
