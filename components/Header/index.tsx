@@ -42,7 +42,7 @@ const Header = () => {
            <Image
             src="/images/logo/logo-light.png"
               alt="logo"
-              width={124.06}  
+              width={118.06}  
                height={35}     
              className="dark:hidden"
       />

@@ -12,9 +12,9 @@ const Pricing = () => {
           <div className="animate_top mx-auto text-center">
             <SectionHeader
               headerInfo={{
-                title: `Тарифные планы`,
+                title: `Цены`,
                 subtitle: `Выгодный экспорт для каждого`,
-                description: ` Выберите идеальный тариф для вашего агробизнеса и начните экспорт уже сегодня!`,
+                description: ` Качественные продукты для успешного дела.`,
               }}
             />
           </div>
@@ -34,15 +34,13 @@ const Pricing = () => {
             {/* <!-- Pricing Item --> */}
             <div className="animate_top group relative rounded-lg border border-stroke bg-white p-7.5 shadow-solid-10 dark:border-strokedark dark:bg-blacksection dark:shadow-none md:w-[45%] lg:w-1/3 xl:p-12.5">
               <h3 className="mb-7.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                $10{" "}
-                <span className="text-regular text-waterloo dark:text-manatee">
-                  /month
-                </span>
+                15000Р
+               
               </h3>
               <h4 className="mb-2.5 text-para2 font-medium text-black dark:text-white">
-                Малая упаковка
+               Горох
               </h4>
-              <p>Идеально для небольших фермерских хозяйств, начинающих экспортную деятельность.</p>
+              <p>Предлагаем отборный горох напрямую от производителя. Высокое качество, оптимальная цена, быстрая доставка. Горох — это вкус и польза для наших клиентов.</p>
 
               <div className="mt-9 border-t border-stroke pb-12.5 pt-9 dark:border-strokedark">
                 <ul>
@@ -50,7 +48,7 @@ const Pricing = () => {
                     Экспорт до 300 тонн в год
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
-                    Базовая консультационная поддержка
+                    консультационная поддержка
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
                     Стандартная документация
@@ -64,20 +62,16 @@ const Pricing = () => {
 
             {/* <!-- Pricing Item --> */}
             <div className="animate_top group relative rounded-lg border border-stroke bg-white p-7.5 shadow-solid-10 dark:border-strokedark dark:bg-blacksection dark:shadow-none md:w-[45%] lg:w-1/3 xl:p-12.5">
-              <div className="absolute -right-3.5 top-7.5 -rotate-90 rounded-bl-full rounded-tl-full bg-primary px-4.5 py-1.5 text-metatitle font-medium uppercase text-white">
-                popular
-              </div>
+             
 
               <h3 className="mb-7.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                $59{" "}
-                <span className="text-regular text-waterloo dark:text-manatee">
-                  /month
-                </span>
+                11300Р
+             
               </h3>
               <h4 className="mb-2.5 text-para2 font-medium text-black dark:text-white">
-                Средний пакет
+               Пшеница
               </h4>
-              <p>Оптимальное решение для средних агрохолдингов, желающих увеличить объемы экспорта.</p>
+              <p>Поставляем качественную пшеницу для мукомольных предприятий, пекарен и других производителей. Гарантируем высокое содержание клейковины, соответствие ГОСТ и своевременную доставку.</p>
 
               <div className="mt-9 border-t border-stroke pb-12.5 pt-9 dark:border-strokedark">
                 <ul>
@@ -85,10 +79,10 @@ const Pricing = () => {
               Экспорт до 1500 тонн в год
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
-                   Расширенная консультационная поддержка
+                   консультационная поддержка
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
-                   Полный пакет документов
+                  Стандартная документация
                   </li>
                  
                 </ul>
@@ -100,26 +94,24 @@ const Pricing = () => {
             {/* <!-- Pricing Item --> */}
             <div className="animate_top group relative rounded-lg border border-stroke bg-white p-7.5 shadow-solid-10 dark:border-strokedark dark:bg-blacksection dark:shadow-none md:w-[45%] lg:w-1/3 xl:p-12.5">
               <h3 className="mb-7.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                $189{" "}
-                <span className="text-regular text-waterloo dark:text-manatee">
-                  /month
-                </span>
+               20000Р
+                
               </h3>
               <h4 className="mb-2.5 text-para2 font-medium text-black dark:text-white">
-                большая упаковка
+               Подсолнечник
               </h4>
-              <p>Все, что нужно для крупного агробизнеса, ориентированного на максимальный экспорт.</p>
+              <p>Реализуем подсолнечник для масложировых предприятий. Высокое содержание масла, минимальное количество сора, выгодные условия сотрудничества. Качество, подтвержденное сертификатами, и стабильные поставки.</p>
 
-              <div className="mt-9 border-t border-stroke pb-12.5 pt-9 dark:border-strokedark">
-                <ul>
+              <div className="mt-4 border-t border-stroke pb-12.5 pt-9 dark:border-strokedark">
+                <ul >
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
                     Неограниченный объем экспорта
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
-                  Персональный менеджер
+                  консультационная поддержка
                   </li>
                   <li className="mb-4 text-black last:mb-0 dark:text-manatee">
-                   Индивидуальная логистическая стратегия
+                  Стандартная документация
                   </li>
                  
                 </ul>
