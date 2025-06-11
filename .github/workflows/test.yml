@@ -1,0 +1,249 @@
+name: 🧪 Нейросетевое тестирование
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  unit-tests:
+    name: 🔬 Unit тесты
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Настройка Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: 📦 Установка зависимостей
+      run: npm ci
+      
+    - name: 🔍 Линтинг
+      run: npm run lint
+      
+    - name: 🧪 Запуск unit тестов
+      run: npm run test:ci
+      
+    - name: 📊 Загрузка отчета покрытия
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        
+    - name: 💾 Сохранение артефактов покрытия
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-${{ matrix.node-version }}
+        path: coverage/
+
+  integration-tests:
+    name: 🔗 Integration тесты
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Настройка Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📦 Установка зависимостей
+      run: npm ci
+      
+    - name: 🏗️ Сборка приложения
+      run: npm run build
+      
+    - name: 🧪 Запуск integration тестов
+      run: npm run test -- --testPathPattern=api
+      env:
+        NODE_ENV: test
+
+  e2e-tests:
+    name: 🎭 E2E тесты
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Настройка Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📦 Установка зависимостей
+      run: npm ci
+      
+    - name: 🎭 Установка Playwright
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+      
+    - name: 🏗️ Сборка приложения
+      run: npm run build
+      
+    - name: 🧪 Запуск E2E тестов
+      run: npx playwright test --project=${{ matrix.browser }}
+      env:
+        CI: true
+        
+    - name: 📊 Загрузка отчетов Playwright
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report-${{ matrix.browser }}
+        path: playwright-report/
+        retention-days: 30
+
+  ai-test-generation:
+    name: 🤖 AI генерация тестов
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Настройка Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📦 Установка зависимостей
+      run: npm ci
+      
+    - name: 🤖 Анализ компонентов
+      run: npm run test:analyze
+      
+    - name: 🧠 Генерация AI тестов
+      run: npm run test:generate
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        
+    - name: 📊 Создание отчета качества
+      run: |
+        echo "## 🤖 AI Анализ тестирования" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f "component-analysis-report.json" ]; then
+          echo "### 📊 Анализ компонентов:" >> $GITHUB_STEP_SUMMARY
+          node -e "
+            const report = require('./component-analysis-report.json');
+            console.log(\`- Всего компонентов: \${report.totalComponents}\`);
+            console.log(\`- Сложность: Низкая: \${report.complexityDistribution.low}, Средняя: \${report.complexityDistribution.medium}, Высокая: \${report.complexityDistribution.high}\`);
+            console.log(\`- Компонентов с формами: \${report.formComponents}\`);
+            console.log(\`- Компонентов с состоянием: \${report.componentsWithState}\`);
+          " >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ -f "test-quality-report.json" ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔍 Качество тестов:" >> $GITHUB_STEP_SUMMARY
+          node -e "
+            const report = require('./test-quality-report.json');
+            console.log(\`- Всего тестов: \${report.totalTests}\`);
+            console.log(\`- Проблемы покрытия: \${report.coverageIssues.length}\`);
+            console.log(\`- Проблемы качества: \${report.qualityIssues.length}\`);
+            console.log(\`- Рекомендации: \${report.recommendations.length}\`);
+          " >> $GITHUB_STEP_SUMMARY
+        fi
+        
+    - name: 💾 Сохранение AI отчетов
+      uses: actions/upload-artifact@v4
+      with:
+        name: ai-analysis-reports
+        path: |
+          component-analysis-report.json
+          test-quality-report.json
+
+  security-scan:
+    name: 🔒 Безопасность
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🔍 Сканирование секретов с TruffleHog
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+        
+    - name: 🛡️ Аудит npm пакетов
+      run: npm audit --audit-level moderate
+
+  performance-tests:
+    name: ⚡ Производительность
+    runs-on: ubuntu-latest
+    needs: e2e-tests
+    
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Настройка Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📦 Установка зависимостей
+      run: npm ci
+      
+    - name: 🎭 Установка Playwright
+      run: npx playwright install chromium
+      
+    - name: 🏗️ Сборка приложения
+      run: npm run build
+      
+    - name: ⚡ Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        configPath: './lighthouserc.json'
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+
+  test-summary:
+    name: �� Сводка тестирования
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests, security-scan]
+    if: always()
+    
+    steps:
+    - name: 📊 Создание сводки
+      run: |
+        echo "## 🧪 Результаты нейросетевого тестирования" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Статус тестов:" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔬 Unit тесты: ${{ needs.unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔗 Integration тесты: ${{ needs.integration-tests.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🎭 E2E тесты: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔒 Безопасность: ${{ needs.security-scan.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🎯 Следующие шаги:" >> $GITHUB_STEP_SUMMARY
+        echo "- ������оверьте отчеты покрытия кода" >> $GITHUB_STEP_SUMMARY
+        echo "- Изучите AI рекомендации по улучшению тестов" >> $GITHUB_STEP_SUMMARY
+        echo "- Обратите внимание на проблемы безопасности" >> $GITHUB_STEP_SUMMARY
+        echo "- Оптимизируйте производительность при необходимости" >> $GITHUB_STEP_SUMMARY
